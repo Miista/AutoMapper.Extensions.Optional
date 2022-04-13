@@ -14,7 +14,6 @@ namespace AutoMapper.Extensions.Optional.Tests
 
     [Theory]
     [ClassData(typeof(TypesData))]
-    //[MemberData(nameof(Can_map_to_Option_Data))]
     public void Can_map_between_Options(Type sourceType, Type destinationType)
     {
       // Arrange

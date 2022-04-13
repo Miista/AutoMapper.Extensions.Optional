@@ -13,28 +13,6 @@ namespace AutoMapper.Extensions.Optional.Tests
   {
     private readonly IFixture _fixture = new Fixture();
 
-    /*
-    [Theory]
-    [MemberData(nameof(Can_map_to_Option_Data))]
-    public void Can_map_to_Option(Type type)
-    {
-      // Arrange
-      var source = _fixture.Create(type, new SpecimenContext(_fixture));
-      var destination = CreateOption(source, type);
-
-      var mapper = CreateMapper();
-
-      // Act
-      Action act = () => mapper.Map(source, destination);
-
-      // Assert
-      act.Should().NotThrow();
-
-      var resultingValue = mapper.Map(source, destination);
-      resultingValue.Should().BeEquivalentTo(destination);
-    }
-    */
-
     #region Helpers
     
     private object CreateOption(object o, Type type) => MakeStaticGeneric(nameof(Some), type).Invoke(null, new[] {o});
@@ -62,34 +40,8 @@ namespace AutoMapper.Extensions.Optional.Tests
     
     #endregion Helpers
     
-    // ReSharper disable once InconsistentNaming
-    // ReSharper disable once MemberCanBePrivate.Global
-    /*
-    public static IEnumerable<object[]> Can_map_to_Option_Data
-    {
-      get
-      {
-        // decimal is skipped because it causes an AmbiguousMatchException
-        yield return new object[] {typeof(bool)};
-        yield return new object[] {typeof(string)};
-        yield return new object[] {typeof(char)};
-        yield return new object[] {typeof(byte)};
-        yield return new object[] {typeof(double)};
-        yield return new object[] {typeof(float)};
-        yield return new object[] {typeof(short)};
-        yield return new object[] {typeof(int)};
-        yield return new object[] {typeof(long)};
-        yield return new object[] {typeof(ushort)};
-        yield return new object[] {typeof(uint)};
-        yield return new object[] {typeof(ulong)};
-        yield return new object[] {typeof(Uri)};
-      }
-    }
-    */
-
     [Theory]
     [ClassData(typeof(TypesData))]
-    //[MemberData(nameof(Can_map_to_Option2_Data))]
     public void Can_map_to_Option2(Type sourceType, Type destinationType)
     {
       // Arrange
