@@ -13,6 +13,7 @@ namespace AutoMapper.Extensions.Optional.Tests
   {
     private readonly IFixture _fixture = new Fixture();
 
+    /*
     [Theory]
     [MemberData(nameof(Can_map_to_Option_Data))]
     public void Can_map_to_Option(Type type)
@@ -21,12 +22,7 @@ namespace AutoMapper.Extensions.Optional.Tests
       var source = _fixture.Create(type, new SpecimenContext(_fixture));
       var destination = CreateOption(source, type);
 
-      var mapperConfiguration = new MapperConfiguration(expression =>
-      {
-        // The mapper must be inserted at the beginning of the list to ensure that it is visited first.
-        expression.Mappers.Insert(0, new OptionDestinationMapper());
-      });
-      var mapper = mapperConfiguration.CreateMapper();
+      var mapper = CreateMapper();
 
       // Act
       Action act = () => mapper.Map(source, destination);
@@ -37,6 +33,9 @@ namespace AutoMapper.Extensions.Optional.Tests
       var resultingValue = mapper.Map(source, destination);
       resultingValue.Should().BeEquivalentTo(destination);
     }
+    */
+
+    #region Helpers
     
     private object CreateOption(object o, Type type) => MakeStaticGeneric(nameof(Some), type).Invoke(null, new[] {o});
 
@@ -48,8 +47,22 @@ namespace AutoMapper.Extensions.Optional.Tests
 
     private static Option<T> Some<T>(T value) => value.Some();
 
+    private static IMapper CreateMapper()
+    {
+      var mapperConfiguration = new MapperConfiguration(configuration =>
+      {
+        configuration.Mappers.Insert(0, new OptionDestinationMapper());
+      });
+
+
+      return mapperConfiguration.CreateMapper();
+    }
+    
+    #endregion Helpers
+    
     // ReSharper disable once InconsistentNaming
     // ReSharper disable once MemberCanBePrivate.Global
+    /*
     public static IEnumerable<object[]> Can_map_to_Option_Data
     {
       get
@@ -68,6 +81,56 @@ namespace AutoMapper.Extensions.Optional.Tests
         yield return new object[] {typeof(uint)};
         yield return new object[] {typeof(ulong)};
         yield return new object[] {typeof(Uri)};
+      }
+    }
+    */
+
+    private static Type CreateConcreteOptionType(Type concreteType) => typeof(Option<>).MakeGenericType(concreteType);
+
+    [Theory]
+    [MemberData(nameof(Can_map_to_Option2_Data))]
+    public void Can_map_to_Option2(Type sourceType, Type destinationType)
+    {
+      // Arrange
+      var sourceValue = _fixture.Create(sourceType, new SpecimenContext(_fixture));
+      var optionDestinationType = CreateConcreteOptionType(destinationType);
+
+      var sut = CreateMapper();
+      var mappedSourceValue = sut.Map(sourceValue, sourceType, destinationType);
+      var mappedOption = CreateOption(mappedSourceValue, destinationType);
+
+      // Act
+      Action act = () => sut.Map(sourceValue, sourceType, optionDestinationType);
+
+      // Assert
+      act.Should().NotThrow();
+
+      var resultingValue = sut.Map(sourceValue, sourceType, optionDestinationType);
+      resultingValue.Should().BeEquivalentTo(mappedOption);
+    }
+
+    // ReSharper disable once InconsistentNaming
+    // ReSharper disable once MemberCanBePrivate.Global
+    public static IEnumerable<object[]> Can_map_to_Option2_Data
+    {
+      get
+      {
+        // decimal is skipped because it causes an AmbiguousMatchException
+        yield return new object[] {typeof(bool), typeof(bool)};
+        yield return new object[] {typeof(string), typeof(string)};
+        yield return new object[] {typeof(char), typeof(char)};
+        yield return new object[] {typeof(byte), typeof(byte)};
+        yield return new object[] {typeof(double), typeof(double)};
+        yield return new object[] {typeof(double), typeof(string)};
+        yield return new object[] {typeof(float), typeof(float)};
+        yield return new object[] {typeof(short), typeof(short)};
+        yield return new object[] {typeof(int), typeof(int)};
+        yield return new object[] {typeof(long), typeof(long)};
+        yield return new object[] {typeof(ushort), typeof(ushort)};
+        yield return new object[] {typeof(uint), typeof(uint)};
+        yield return new object[] {typeof(ulong), typeof(ulong)};
+        yield return new object[] {typeof(Uri), typeof(Uri)};
+        yield return new object[] {typeof(Uri), typeof(string)};
       }
     }
   }

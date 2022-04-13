@@ -33,7 +33,11 @@ namespace AutoMapper.Extensions.Optional
 
       if (sourceExpression.Type.IsValueType)
       {
-        return Expression.Call(someMethod, sourceExpression);
+        var getMapperExpression = Expression.Property(contextExpression, typeof(ResolutionContext).GetProperty(nameof(ResolutionContext.Mapper)));
+        var mapMethodInfo = typeof(IRuntimeMapper).GetMethods()[2].MakeGenericMethod(sourceExpression.Type, concreteType);
+        var mapExpression = Expression.Call(contextExpression, typeof(IMapper).GetMethods()[2].MakeGenericMethod(sourceExpression.Type, concreteType), sourceExpression);
+        
+        return Expression.Call(someMethod, mapExpression);
       }
       
       var nullCheck = Expression.Equal(
@@ -41,10 +45,12 @@ namespace AutoMapper.Extensions.Optional
         right: sourceExpression
       );
 
+      var mapExpression1 = Expression.Call(contextExpression, typeof(IMapper).GetMethods()[2].MakeGenericMethod(sourceExpression.Type, concreteType), sourceExpression);
+      
       var conditionalExpression = Expression.Condition(
         test: nullCheck,
         ifTrue: Expression.Call(noneMethod),
-        ifFalse: Expression.Call(someMethod, sourceExpression)
+        ifFalse: Expression.Call(someMethod, mapExpression1)
       );
 
       return conditionalExpression;
