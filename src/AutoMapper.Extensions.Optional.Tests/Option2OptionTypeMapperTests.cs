@@ -36,7 +36,9 @@ namespace AutoMapper.Extensions.Optional.Tests
       var resultingValue = sut.Map(sourceValue, optionSourceType, optionDestinationType);
       resultingValue.Should().BeEquivalentTo(mappedDestinationValue);
     }
-    
+
+    #region Helpers
+
     private static IMapper CreateMapper()
     {
       var mapperConfiguration = new MapperConfiguration(configuration =>
@@ -57,5 +59,7 @@ namespace AutoMapper.Extensions.Optional.Tests
       ?? throw new InvalidOperationException($"Cannot make generic method of '{methodName}'");
 
     private static Option<T> Some<T>(T value) => value.Some();
+    
+    #endregion Helpers
   }
 }
