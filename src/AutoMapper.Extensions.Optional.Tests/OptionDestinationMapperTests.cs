@@ -24,7 +24,7 @@ namespace AutoMapper.Extensions.Optional.Tests
       var mapperConfiguration = new MapperConfiguration(expression =>
       {
         // The mapper must be inserted at the beginning of the list to ensure that it is visited first.
-        expression.Mappers.Insert(0, new OptionSourceMapper());
+        expression.Mappers.Insert(0, new OptionDestinationMapper());
       });
       var mapper = mapperConfiguration.CreateMapper();
 
@@ -37,7 +37,7 @@ namespace AutoMapper.Extensions.Optional.Tests
       var resultingValue = mapper.Map(source, destination);
       resultingValue.Should().BeEquivalentTo(destination);
     }
-
+    
     private object CreateOption(object o, Type type) => MakeStaticGeneric(nameof(Some), type).Invoke(null, new[] {o});
 
     private MethodInfo MakeStaticGeneric(string methodName, Type genericType) =>
