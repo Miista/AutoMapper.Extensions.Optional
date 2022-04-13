@@ -39,7 +39,7 @@ namespace AutoMapper.Extensions.Optional
       return Expression.Condition(
         test: Expression.Call(hasValueMethod, sourceExpression),
         ifTrue: Expression.Call(getValueMethod, sourceExpression),
-        ifFalse: Expression.Default(typeof(double))
+        ifFalse: Expression.Default(destExpression.Type)
       );
     }
 
