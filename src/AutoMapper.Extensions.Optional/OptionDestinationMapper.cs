@@ -27,16 +27,16 @@ namespace AutoMapper.Extensions.Optional
       Expression destExpression,
       Expression contextExpression)
     {
-      var concreteType = destExpression.Type.GenericTypeArguments[0];
-      var someMethod = MakeStaticGeneric(nameof(Some), concreteType);
-      var noneMethod = MakeStaticGeneric(nameof(None), concreteType);
-
+      var concreteDestinationType = destExpression.Type.GenericTypeArguments[0];
+      
+      var someMethod = MakeStaticGeneric(nameof(Some), concreteDestinationType);
+      var noneMethod = MakeStaticGeneric(nameof(None), concreteDestinationType);
+      var mapMethod = GetMapMethod(sourceExpression.Type, concreteDestinationType);
+      
+      var mapExpression = Expression.Call(contextExpression, mapMethod, sourceExpression);
+      
       if (sourceExpression.Type.IsValueType)
       {
-        var getMapperExpression = Expression.Property(contextExpression, typeof(ResolutionContext).GetProperty(nameof(ResolutionContext.Mapper)));
-        var mapMethodInfo = typeof(IRuntimeMapper).GetMethods()[2].MakeGenericMethod(sourceExpression.Type, concreteType);
-        var mapExpression = Expression.Call(contextExpression, typeof(IMapper).GetMethods()[2].MakeGenericMethod(sourceExpression.Type, concreteType), sourceExpression);
-        
         return Expression.Call(someMethod, mapExpression);
       }
       
@@ -45,16 +45,19 @@ namespace AutoMapper.Extensions.Optional
         right: sourceExpression
       );
 
-      var mapExpression1 = Expression.Call(contextExpression, typeof(IMapper).GetMethods()[2].MakeGenericMethod(sourceExpression.Type, concreteType), sourceExpression);
-      
       var conditionalExpression = Expression.Condition(
         test: nullCheck,
         ifTrue: Expression.Call(noneMethod),
-        ifFalse: Expression.Call(someMethod, mapExpression1)
+        ifFalse: Expression.Call(someMethod, mapExpression)
       );
 
       return conditionalExpression;
     }
+
+    private static MethodInfo GetMapMethod(Type sourceType, Type destinationType) =>
+      typeof(IMapper)
+        .GetMethods()[2]
+        .MakeGenericMethod(sourceType, destinationType);
 
     private static Option<T> Some<T>(T value) => value.Some();
     private static Option<T> None<T>() => Option.None<T>();

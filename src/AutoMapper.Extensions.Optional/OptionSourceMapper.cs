@@ -27,32 +27,35 @@ namespace AutoMapper.Extensions.Optional
       Expression destExpression,
       Expression contextExpression)
     {
-      var concreteType = sourceExpression.Type.GenericTypeArguments[0];
-      var c = destExpression.Type;
-      var hasValueMethod = MakeStaticGeneric(nameof(HasValue), concreteType);
-      var getValueMethod = MakeStaticGeneric(nameof(GetValue), concreteType);
-      var objectMapper = configurationProvider.FindMapper(new TypePair(concreteType, destExpression.Type));
-      var mapMethod = typeof(IObjectMapper).GetMethod(nameof(IObjectMapper.MapExpression));
+      var concreteSourceType = sourceExpression.Type.GenericTypeArguments[0];
+      var concreteDestinationType = destExpression.Type;
+      
+      var hasValueMethod = MakeStaticGeneric(nameof(HasValue), concreteSourceType);
+      var getValueMethod = MakeStaticGeneric(nameof(GetValue), concreteSourceType);
+      var mapMethod = GetMapMethod(concreteSourceType, concreteDestinationType);
 
-      //var methodCallExpression = Expression.Call(mapMethod, Expression.Constant(objectMapper), Expression.Constant(configurationProvider),
-        //Expression.Constant(profileMap), Expression.Call(getValueMethod, sourceExpression), destExpression, contextExpression);
+      var getValueExpression = Expression.Call(getValueMethod, sourceExpression);
+      var mapExpression = Expression.Call(contextExpression, mapMethod, getValueExpression);
+      
       return Expression.Condition(
         test: Expression.Call(hasValueMethod, sourceExpression),
-        ifTrue: Expression.Call(getValueMethod, sourceExpression),
-        ifFalse: Expression.Default(destExpression.Type)
+        ifTrue: mapExpression,
+        ifFalse: Expression.Default(concreteDestinationType)
       );
     }
+
+    private static MethodInfo GetMapMethod(Type sourceType, Type destinationType) =>
+      typeof(IMapper)
+        .GetMethods()[2]
+        .MakeGenericMethod(sourceType, destinationType);
 
     private static bool HasValue<T>(Option<T> option) => option.HasValue;
     private static T GetValue<T>(Option<T> option) => option.ValueOr(default(T));
 
-    private static MethodInfo MakeStaticGeneric(string methodName, Type genericType)
-    {
-      return
-        typeof(OptionSourceMapper)
-          ?.GetMethod(methodName, BindingFlags.Default | BindingFlags.Static | BindingFlags.NonPublic)
-          ?.MakeGenericMethod(genericType)
-        ?? throw new InvalidOperationException($"Cannot make generic method of '{methodName}'");
-    }
+    private static MethodInfo MakeStaticGeneric(string methodName, Type genericType) =>
+      typeof(OptionSourceMapper)
+        .GetMethod(methodName, BindingFlags.Default | BindingFlags.Static | BindingFlags.NonPublic)
+        ?.MakeGenericMethod(genericType)
+      ?? throw new InvalidOperationException($"Cannot make generic method of '{methodName}'");
   }
 }

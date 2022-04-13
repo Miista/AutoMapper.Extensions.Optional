@@ -58,6 +58,8 @@ namespace AutoMapper.Extensions.Optional.Tests
       return mapperConfiguration.CreateMapper();
     }
     
+    private static Type CreateConcreteOptionType(Type concreteType) => typeof(Option<>).MakeGenericType(concreteType);
+    
     #endregion Helpers
     
     // ReSharper disable once InconsistentNaming
@@ -85,10 +87,9 @@ namespace AutoMapper.Extensions.Optional.Tests
     }
     */
 
-    private static Type CreateConcreteOptionType(Type concreteType) => typeof(Option<>).MakeGenericType(concreteType);
-
     [Theory]
-    [MemberData(nameof(Can_map_to_Option2_Data))]
+    [ClassData(typeof(TypesData))]
+    //[MemberData(nameof(Can_map_to_Option2_Data))]
     public void Can_map_to_Option2(Type sourceType, Type destinationType)
     {
       // Arrange
