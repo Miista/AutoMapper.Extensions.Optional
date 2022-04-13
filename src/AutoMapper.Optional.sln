@@ -6,9 +6,34 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2. Feature", "2. Feature", 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3. Foundation", "3. Foundation", "{2FEF150C-FF93-44B9-985E-177F23C144BD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sandbox", "Sandbox\Sandbox.csproj", "{C04E2639-6283-4701-BBE1-0C529DA3C231}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoMapper.Extensions.Optional", "AutoMapper.Extensions.Optional\AutoMapper.Extensions.Optional.csproj", "{C951B031-DCEB-4FCD-8A2D-549E7A7E941A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoMapper.Extensions.Optional.Tests", "AutoMapper.Extensions.Optional.Tests\AutoMapper.Extensions.Optional.Tests.csproj", "{41A97985-142B-4C6F-9C09-37D7F053BD1F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{C04E2639-6283-4701-BBE1-0C529DA3C231} = {00939393-DE1A-45F3-AE6E-395EA433CB9B}
+		{C951B031-DCEB-4FCD-8A2D-549E7A7E941A} = {E1C7CD03-8762-46A8-BF50-470686C1BE24}
+		{41A97985-142B-4C6F-9C09-37D7F053BD1F} = {E1C7CD03-8762-46A8-BF50-470686C1BE24}
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C04E2639-6283-4701-BBE1-0C529DA3C231}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C04E2639-6283-4701-BBE1-0C529DA3C231}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C04E2639-6283-4701-BBE1-0C529DA3C231}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C04E2639-6283-4701-BBE1-0C529DA3C231}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C951B031-DCEB-4FCD-8A2D-549E7A7E941A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C951B031-DCEB-4FCD-8A2D-549E7A7E941A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C951B031-DCEB-4FCD-8A2D-549E7A7E941A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C951B031-DCEB-4FCD-8A2D-549E7A7E941A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{41A97985-142B-4C6F-9C09-37D7F053BD1F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{41A97985-142B-4C6F-9C09-37D7F053BD1F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{41A97985-142B-4C6F-9C09-37D7F053BD1F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{41A97985-142B-4C6F-9C09-37D7F053BD1F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
