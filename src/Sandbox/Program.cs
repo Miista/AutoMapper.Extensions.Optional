@@ -17,6 +17,8 @@ namespace Sandbox
       var mapper = mapperConfiguration.CreateMapper();
       //Console.WriteLine(mapper.Map<double>(((double) 2).Some()));
       //Console.WriteLine(mapper.Map<double>(Option.None<double>()));
+      Console.WriteLine(mapper.Map<int>(true));
+      Console.WriteLine(mapper.Map<double>((double?)null));
       Console.WriteLine(mapper.Map<double?>(null));
       Console.WriteLine(mapper.Map<double?>(Option.None<double>()));
       Console.WriteLine(mapper.Map<Option<double>>(((int)2).Some()));

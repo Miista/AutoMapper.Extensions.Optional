@@ -9,6 +9,8 @@ namespace AutoMapper.Extensions.Optional.Tests
     public IEnumerator<object[]> GetEnumerator()
     {
       // decimal is skipped because it causes an AmbiguousMatchException
+      yield return new object[] {typeof(bool?), typeof(bool?)};
+      yield return new object[] {typeof(double?), typeof(double)};
       yield return new object[] {typeof(bool), typeof(bool)};
       yield return new object[] {typeof(bool), typeof(string)};
       yield return new object[] {typeof(string), typeof(string)};
@@ -25,6 +27,7 @@ namespace AutoMapper.Extensions.Optional.Tests
       yield return new object[] {typeof(int), typeof(int)};
       yield return new object[] {typeof(int), typeof(double)};
       yield return new object[] {typeof(int), typeof(float)};
+      yield return new object[] {typeof(int), typeof(string)};
       yield return new object[] {typeof(long), typeof(long)};
       yield return new object[] {typeof(ushort), typeof(ushort)};
       yield return new object[] {typeof(uint), typeof(uint)};
