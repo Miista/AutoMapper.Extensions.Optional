@@ -29,29 +29,26 @@ namespace AutoMapper.Extensions.Optional
     {
       var concreteDestinationType = destExpression.Type.GenericTypeArguments[0];
       
-      var someMethod = MakeStaticGeneric(nameof(Some), concreteDestinationType);
-      var noneMethod = MakeStaticGeneric(nameof(None), concreteDestinationType);
       var mapMethod = GetMapMethod(sourceExpression.Type, concreteDestinationType);
-      
       var mapExpression = Expression.Call(contextExpression, mapMethod, sourceExpression);
+
+      if (sourceExpression.Type.IsGenericType && sourceExpression.Type.GetGenericTypeDefinition() == typeof(Nullable<>))
+      {
+        var toOptionMethod = MakeStaticGeneric(nameof(ToOption), concreteDestinationType);
+        
+        return Expression.Call(toOptionMethod, sourceExpression);
+      }
       
       if (sourceExpression.Type.IsValueType)
       {
+        var someMethod = MakeStaticGeneric(nameof(Some), concreteDestinationType);
+
         return Expression.Call(someMethod, mapExpression);
       }
       
-      var nullCheck = Expression.Equal(
-        left: Expression.Constant(null),
-        right: sourceExpression
-      );
+      var someNotNullMethod = MakeStaticGeneric(nameof(SomeNotNull), concreteDestinationType);
 
-      var conditionalExpression = Expression.Condition(
-        test: nullCheck,
-        ifTrue: Expression.Call(noneMethod),
-        ifFalse: Expression.Call(someMethod, mapExpression)
-      );
-
-      return conditionalExpression;
+      return Expression.Call(someNotNullMethod, mapExpression);
     }
 
     private static MethodInfo GetMapMethod(Type sourceType, Type destinationType) =>
@@ -60,7 +57,8 @@ namespace AutoMapper.Extensions.Optional
         .MakeGenericMethod(sourceType, destinationType);
 
     private static Option<T> Some<T>(T value) => value.Some();
-    private static Option<T> None<T>() => Option.None<T>();
+    private static Option<T> SomeNotNull<T>(T value) => value.SomeNotNull();
+    private static Option<T> ToOption<T>(T? value) where T : struct => value.ToOption();
 
     private static MethodInfo MakeStaticGeneric(string methodName, Type genericType) =>
       typeof(OptionDestinationMapper)

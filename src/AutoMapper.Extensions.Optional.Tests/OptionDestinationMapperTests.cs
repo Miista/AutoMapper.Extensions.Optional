@@ -122,7 +122,7 @@ namespace AutoMapper.Extensions.Optional.Tests
         yield return new object[] {typeof(bool), default(bool), typeof(bool), default(bool).Some()};
         
         // A? -> A?
-        yield return new object[] {typeof(bool?), null, typeof(bool), Option.None<bool>()};
+        yield return new object[] {typeof(bool?), (bool?)null, typeof(bool), Option.None<bool>()};
         yield return new object[] {typeof(char?), null, typeof(char), Option.None<char>()};
         yield return new object[] {typeof(double?), null, typeof(double), Option.None<double>()};
         yield return new object[] {typeof(float?), null, typeof(float), Option.None<float>()};
@@ -133,6 +133,16 @@ namespace AutoMapper.Extensions.Optional.Tests
         yield return new object[] {typeof(ulong?), null, typeof(ulong), Option.None<ulong>()};
         yield return new object[] {typeof(ushort?), null, typeof(ushort), Option.None<ushort>()};
         yield return new object[] {typeof(Uri), null, typeof(Uri), Option.None<Uri>()};
+        yield return new object[] {typeof(bool?), default(bool), typeof(bool), default(bool).Some()};
+        yield return new object[] {typeof(char?), default(char), typeof(char), default(char).Some()};
+        yield return new object[] {typeof(double?), default(double), typeof(double), default(double).Some()};
+        yield return new object[] {typeof(float?), default(float), typeof(float), default(float).Some()};
+        yield return new object[] {typeof(int?), default(int), typeof(int), default(int).Some()};
+        yield return new object[] {typeof(long?), default(long), typeof(long), default(long).Some()};
+        yield return new object[] {typeof(short?), default(short), typeof(short), default(short).Some()};
+        yield return new object[] {typeof(uint?), default(uint), typeof(uint), default(uint).Some()};
+        yield return new object[] {typeof(ulong?), default(ulong), typeof(ulong), default(ulong).Some()};
+        yield return new object[] {typeof(ushort?), default(ushort), typeof(ushort), default(ushort).Some()};
         
         // A? -> A
         yield return new object[] {typeof(bool?), null, typeof(bool), Option.None<bool>()};
