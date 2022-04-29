@@ -13,6 +13,25 @@ namespace AutoMapper.Extensions.Optional.Tests
   {
     private readonly IFixture _fixture = new Fixture();
 
+    [Fact]
+    public void Maps_None_to_None()
+    {
+      // Arrange
+      var sourceValue = Option.None<double>();
+
+      var sut = CreateMapper();
+      
+      // Act
+      Action act = () => sut.Map<Option<int>>(sourceValue);
+      
+      // Assert
+      act.Should().NotThrow(because: "mapping an Option is a valid scenario");
+      
+      var resultingValue = sut.Map<Option<int>>(sourceValue);
+      resultingValue.Should().BeOfType<Option<int>>(because: "that is the expected destination type");
+      resultingValue.Should().BeEquivalentTo(Option.None<int>(), because: "mapping None results in None");
+    }
+    
     [Theory]
     [ClassData(typeof(TypesData))]
     public void Can_map_between_Options(Type sourceType, Type destinationType)
