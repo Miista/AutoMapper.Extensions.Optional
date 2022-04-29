@@ -37,6 +37,28 @@ namespace AutoMapper.Extensions.Optional.Tests
       var resultingValue = sut.Map(sourceValue, optionSourceType, optionDestinationType);
       resultingValue.Should().BeEquivalentTo(mappedDestinationValue);
     }
+    
+    [Theory]
+    [ClassData(typeof(TypesData))]
+    public void Can_map_between_Options_where_source_is_None(Type sourceType, Type destinationType)
+    {
+      // Arrange
+      var optionSourceType = typeof(Option<>).MakeGenericType(sourceType);
+      var optionDestinationType = typeof(Option<>).MakeGenericType(destinationType);
+      var sourceValue = CreateNone(sourceType);
+      var expectedDestinationValue = CreateNone(destinationType);
+
+      var sut = CreateMapper();
+
+      // Act
+      Action act = () => sut.Map(sourceValue, optionSourceType, optionDestinationType);
+
+      // Assert
+      act.Should().NotThrow();
+
+      var resultingValue = sut.Map(sourceValue, optionSourceType, optionDestinationType);
+      resultingValue.Should().BeEquivalentTo(expectedDestinationValue);
+    }
 
     private static Type CreateConcreteOptionType(Type concreteType) => typeof(Option<>).MakeGenericType(concreteType);
     
@@ -130,6 +152,8 @@ namespace AutoMapper.Extensions.Optional.Tests
 
     private object CreateOption(object o, Type type) => MakeStaticGeneric(nameof(Some), type).Invoke(null, new[] {o});
     
+    private object CreateNone(Type type) => MakeStaticGeneric(nameof(None), type).Invoke(null, new object[0]);
+    
     private MethodInfo MakeStaticGeneric(string methodName, Type genericType) =>
       GetType()
         .GetMethod(methodName, BindingFlags.Default | BindingFlags.Static | BindingFlags.NonPublic)
@@ -137,6 +161,8 @@ namespace AutoMapper.Extensions.Optional.Tests
       ?? throw new InvalidOperationException($"Cannot make generic method of '{methodName}'");
 
     private static Option<T> Some<T>(T value) => value.Some();
+    
+    private static Option<T> None<T>() => Option.None<T>();
     
     #endregion Helpers
   }
