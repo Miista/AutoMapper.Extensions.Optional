@@ -37,6 +37,10 @@ namespace AutoMapper.Extensions.Optional.Tests
     }
 
     private static Type CreateConcreteOptionType(Type concreteType) => typeof(Option<>).MakeGenericType(concreteType);
+    
+    private object CreateNone(Type type) => MakeStaticGeneric(nameof(None), type).Invoke(null, new object[0]);
+    
+    private static Option<T> None<T>() => Option.None<T>();
 
     #endregion Helpers
     
@@ -212,22 +216,18 @@ namespace AutoMapper.Extensions.Optional.Tests
     {
       // Arrange
       var sourceValue = CreateNone(destinationType);
-      var optionSourceType = CreateConcreteOptionType(destinationType);
+      var sourceType = CreateConcreteOptionType(destinationType);
 
       var sut = CreateMapper();
 
       // Act
-      Action act = () => sut.Map(sourceValue, optionSourceType, destinationType);
+      Action act = () => sut.Map(sourceValue, sourceType, destinationType);
 
       // Assert
-      act.Should().NotThrow();
+      act.Should().NotThrow(because: "mapping from None is a valid scenario");
 
-      var resultingValue = sut.Map(sourceValue, optionSourceType, destinationType);
+      var resultingValue = sut.Map(sourceValue, sourceType, destinationType);
       resultingValue.Should().BeEquivalentTo(expectedValue);
     }
-    
-    private object CreateNone(Type type) => MakeStaticGeneric(nameof(None), type).Invoke(null, new object[0]);
-    
-    private static Option<T> None<T>() => Option.None<T>();
   }
 }
