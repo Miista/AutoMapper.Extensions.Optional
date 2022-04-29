@@ -51,7 +51,7 @@ namespace AutoMapper.Extensions.Optional.Tests
       Action act = () => sut.Map(sourceValue, optionSourceType, optionDestinationType);
 
       // Assert
-      act.Should().NotThrow();
+      act.Should().NotThrow(because: "mapping between Options is a valid scenario");
 
       var resultingValue = sut.Map(sourceValue, optionSourceType, optionDestinationType);
       resultingValue.Should().BeEquivalentTo(mappedDestinationValue);
@@ -73,7 +73,7 @@ namespace AutoMapper.Extensions.Optional.Tests
       Action act = () => sut.Map(sourceValue, optionSourceType, optionDestinationType);
 
       // Assert
-      act.Should().NotThrow();
+      act.Should().NotThrow(because: "mapping from None is a valid scenario");
 
       var resultingValue = sut.Map(sourceValue, optionSourceType, optionDestinationType);
       resultingValue.Should().BeEquivalentTo(expectedDestinationValue);
