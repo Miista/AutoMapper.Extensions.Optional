@@ -11,6 +11,7 @@ namespace AutoMapper.Extensions.Optional.Tests
       // decimal is skipped because it causes an AmbiguousMatchException
       yield return new object[] {typeof(bool?), typeof(bool?)};
       yield return new object[] {typeof(double?), typeof(double)};
+      yield return new object[] {typeof(double), typeof(double?)};
       yield return new object[] {typeof(bool), typeof(bool)};
       yield return new object[] {typeof(bool), typeof(string)};
       yield return new object[] {typeof(string), typeof(string)};
