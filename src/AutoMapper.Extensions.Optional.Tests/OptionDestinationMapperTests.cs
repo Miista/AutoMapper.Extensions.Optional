@@ -54,6 +54,8 @@ namespace AutoMapper.Extensions.Optional.Tests
     #region Helpers
     
     private object CreateOption(object o, Type type) => MakeStaticGeneric(nameof(Some), type).Invoke(null, new[] {o});
+    
+    private object CreateNone(Type type) => MakeStaticGeneric(nameof(None), type).Invoke(null, new object[0]);
 
     private MethodInfo MakeStaticGeneric(string methodName, Type genericType) =>
       GetType()
@@ -62,6 +64,8 @@ namespace AutoMapper.Extensions.Optional.Tests
       ?? throw new InvalidOperationException($"Cannot make generic method of '{methodName}'");
 
     private static Option<T> Some<T>(T value) => value.SomeNotNull();
+
+    private static Option<T> None<T>() => Option.None<T>();
 
     private static IMapper CreateMapper()
     {
@@ -203,11 +207,11 @@ namespace AutoMapper.Extensions.Optional.Tests
     {
       // Arrange
       object sourceValue = null;
-      var optionDestinationType = CreateConcreteOptionType(sourceType);
+      var underlyingType = Nullable.GetUnderlyingType(sourceType) ?? sourceType;
+      var optionDestinationType = CreateConcreteOptionType(underlyingType);
 
       var sut = CreateMapper();
-      var mappedSourceValue = sut.Map(sourceValue, sourceType, sourceType);
-      var mappedOption = CreateOption(mappedSourceValue, sourceType);
+      var mappedOption = CreateNone(underlyingType);
 
       // Act
       Action act = () => sut.Map(sourceValue, sourceType, optionDestinationType);
@@ -216,6 +220,7 @@ namespace AutoMapper.Extensions.Optional.Tests
       act.Should().NotThrow();
 
       var resultingValue = sut.Map(sourceValue, sourceType, optionDestinationType);
+      resultingValue.Should().BeOfType(mappedOption.GetType());
       resultingValue.Should().BeEquivalentTo(mappedOption);
     }
   }
