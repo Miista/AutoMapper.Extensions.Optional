@@ -206,22 +206,21 @@ namespace AutoMapper.Extensions.Optional.Tests
     public void Can_map_null_to_Option(Type sourceType)
     {
       // Arrange
-      object sourceValue = null;
       var underlyingType = Nullable.GetUnderlyingType(sourceType) ?? sourceType;
-      var optionDestinationType = CreateConcreteOptionType(underlyingType);
+      var destinationType = CreateConcreteOptionType(underlyingType);
 
       var sut = CreateMapper();
-      var mappedOption = CreateNone(underlyingType);
 
       // Act
-      Action act = () => sut.Map(sourceValue, sourceType, optionDestinationType);
+      Action act = () => sut.Map(null, sourceType, destinationType);
 
       // Assert
       act.Should().NotThrow();
 
-      var resultingValue = sut.Map(sourceValue, sourceType, optionDestinationType);
-      resultingValue.Should().BeOfType(mappedOption.GetType());
-      resultingValue.Should().BeEquivalentTo(mappedOption);
+      var none = CreateNone(underlyingType);
+      var resultingValue = sut.Map(null, sourceType, destinationType);
+      resultingValue.Should().BeOfType(none.GetType(), because: "null maps to Option.None<T>()");
+      resultingValue.Should().BeEquivalentTo(none, because: "null maps to Option.None<T>()");
     }
   }
 }
