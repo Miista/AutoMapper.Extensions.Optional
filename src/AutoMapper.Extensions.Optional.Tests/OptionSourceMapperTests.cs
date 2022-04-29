@@ -111,7 +111,7 @@ namespace AutoMapper.Extensions.Optional.Tests
     
     [Theory]
     [MemberData(nameof(Maps_A_to_A_Data))]
-    public void Maps_A_to_A(
+    public void Maps_Option_A_to_A(
       Type sourceType,
       object sourceValue,
       Type destinationType,

@@ -22,6 +22,8 @@ namespace Sandbox
       Console.WriteLine(mapper.Map<double?>(null));
       Console.WriteLine(mapper.Map<double?>(Option.None<double>()));
       Console.WriteLine(mapper.Map<Option<double>>(((int)2).Some()));
+      Console.WriteLine(Option.None<bool?>());
+      Console.WriteLine(Option.Some<bool?>(true));
     }
   }
 }

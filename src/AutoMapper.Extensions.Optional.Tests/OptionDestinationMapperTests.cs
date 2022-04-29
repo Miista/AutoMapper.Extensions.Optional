@@ -79,8 +79,8 @@ namespace AutoMapper.Extensions.Optional.Tests
     #endregion Helpers
 
     [Theory]
-    [MemberData(nameof(Maps_A_to_A_Data))]
-    public void Maps_A_to_A(
+    [MemberData(nameof(Maps_A_to_Option_A_Data))]
+    public void Maps_A_to_Option_A(
       Type sourceType,
       object sourceValue,
       Type destinationType,
@@ -102,7 +102,7 @@ namespace AutoMapper.Extensions.Optional.Tests
       resultingValue.Should().BeEquivalentTo(expectedDestinationValue);
     }
 
-    public static IEnumerable<object[]> Maps_A_to_A_Data
+    public static IEnumerable<object[]> Maps_A_to_Option_A_Data
     {
       get
       {
